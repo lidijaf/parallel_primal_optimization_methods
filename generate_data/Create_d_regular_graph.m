@@ -14,3 +14,10 @@ while ~isempty(U) && reps < matIter
         U = [U(1:v(1)-1), U(v(1)+1:v(2)-1), U(v(2)+1:end)];
     end
 end
+if (norm(G-G','fro')>0) || (max(G(:))>1)
+    || (min(sum(G))<sum(G)(1) || max(sum(G))>sum(G)(1)) || 
+    norm(diag(G))>0
+    ok=0;
+else
+    ok=1;
+end
