@@ -7,7 +7,7 @@
 #include "util.utility.h"
 #include "io/read_write.h"
 #include "neighbourhood/neighbourhood_check.h"
-#include "compute_updates/com_upd.h"
+#include "compute_updates/comp_upd.h"
 
 #include <lapacke.h>
 #include <stdio.h>
