@@ -198,7 +198,7 @@ void DQNParallel_SUD(int N, int Dim, int size_row, int size_col, char* type, cha
 	 
 		compute_Gradient(N_w, N_x, N_f, rem, Dim, X, Gradient, GradOld, my_rank, Adata, Bdata, lambda_penal);
 
-		compute_Hessian(Dim, N_f, N_w, N_x, my_rank, rem, Adata, ww, vv, lambda_penal, GMatrix, eye)
+		compute_Hessian(Dim, N_f, N_w, N_x, my_rank, rem, Adata, ww, vv, lambda_penal, GMatrix, eye);
 
 		int my_communicator_size=0;
 		MPI_Comm_size(allCurrComms[my_rank], &my_communicator_size);
