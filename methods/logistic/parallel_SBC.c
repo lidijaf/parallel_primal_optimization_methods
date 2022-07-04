@@ -24,7 +24,7 @@
 #include<time.h>
 
 
-void DQNquadraticParallel(int N, int Dim, int size_row, int size_col, char* type, char* path){
+void DQNParallel_SBC(int N, int Dim, int size_row, int size_col, char* type, char* path){
 	int my_rank;
 	int procs;
 	int N_w=size_col;
