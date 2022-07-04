@@ -111,7 +111,7 @@ void DQNquadraticParallel(int N, int Dim, int size_row, int size_col, char* type
 	for(i=Dim-1;i>=0;--i)
 		Wii[i*Dim+i]=myWMatrix[my_rank];
 
-	double *Gradijent=calloc(Dim, sizeof(double));
+	double *Gradient=calloc(Dim, sizeof(double));
 	double *Xremote=calloc(Dim*(my_neighbours_count+1), sizeof(double));
 
 	double *AWeightInv=calloc(Dim*Dim, sizeof(double));
@@ -168,7 +168,7 @@ void DQNquadraticParallel(int N, int Dim, int size_row, int size_col, char* type
 	   	}
 	    	
 	   	double *curRes=calloc(Dim, sizeof(double));
-	   	double *GradijentGlob=calloc(Dim*N, sizeof(double));
+	   	double *GradientGlob=calloc(Dim*N, sizeof(double));
 	 
 	   	for(i=0;i<Dim;i++){
 	   		curRes[i]=(1-myWMatrix[my_rank])*X[i];
@@ -179,11 +179,11 @@ void DQNquadraticParallel(int N, int Dim, int size_row, int size_col, char* type
 	   		curRes[i]+=stepSize*GradOld[i];
 	   	}
 
-	   	MPI_Gather(curRes, Dim, MPI_DOUBLE, GradijentGlob, Dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);	
+	   	MPI_Gather(curRes, Dim, MPI_DOUBLE, GradientGlob, Dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);	
 
 		  double euclidean_norm;
 		  if(my_rank==0){
-			  euclidean_norm=cblas_dnrm2 (Dim*N, GradijentGlob, 1);
+			  euclidean_norm=cblas_dnrm2 (Dim*N, GradientGlob, 1);
 		  }
 	  	MPI_Bcast(&euclidean_norm, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 		  if(k<iter && euclidean_norm<epsilon && euclidean_norm>0.0){
@@ -191,7 +191,7 @@ void DQNquadraticParallel(int N, int Dim, int size_row, int size_col, char* type
 			  continue;
 		}
 
-	  cblas_daxpy(Dim, stepSize, Gradijent, 1, NablaPsi, 1);
+	  cblas_daxpy(Dim, stepSize, Gradient, 1, NablaPsi, 1);
 
 	  for(i=Dim-1;i>=0;--i)
 	    AWeight[i*Dim+i]=1.0;
@@ -212,7 +212,7 @@ void DQNquadraticParallel(int N, int Dim, int size_row, int size_col, char* type
 		free(pivotArray);
 	}
 	
-	free(Gradijent);
+	free(Gradient);
 	free(Xremote);
 	free(AWeightInv);
 	free(GMatrix);
