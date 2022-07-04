@@ -1,4 +1,4 @@
-#include <lapacke_utils.h>
+#include "utility.h"
 
 double min(double* a, int Dim) {
 	double minVal = a[0];
