@@ -19,3 +19,14 @@ int get_my_active_neighbour(int k, int my_rank, int *my_neighbours, int my_neigh
 			return neighbour;
 	}
 }
+
+
+int get_active_neighbour_count(int *my_neighbours, int my_neighbours_count, int *active){
+	int cnt=0;
+	for(int i=0;i<my_neighbours_count;i++){
+		if(active[my_neighbours[i]]){
+			++cnt;
+		}
+	}
+	return cnt;
+}
