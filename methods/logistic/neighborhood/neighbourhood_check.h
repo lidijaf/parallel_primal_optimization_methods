@@ -19,4 +19,6 @@ int is_my_neighbour(int my_rank, int i, int *my_neighbours, int my_neighbours_co
 
 int get_my_active_neighbour(int k, int my_rank, int *my_neighbours, int my_neighbours_count, int *active);
 
+int get_active_neighbour_count(int *my_neighbours, int my_neighbours_count, int *active);
+
 #endif
