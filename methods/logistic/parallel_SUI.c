@@ -109,7 +109,7 @@ void DQNParallel_SUI(int N, int Dim, int size_row, int size_col, char* type, cha
 	double *X=calloc(Dim, sizeof(double));
 	double *Wii=calloc(Dim*Dim, sizeof(double));
 
-	double *Gradijent=calloc(Dim, sizeof(double));
+	double *Gradient=calloc(Dim, sizeof(double));
 
 	double *AWeightInv=calloc(Dim*Dim, sizeof(double));
 	double *GMatrix=calloc(Dim*Dim, sizeof(double));
@@ -223,25 +223,25 @@ void DQNParallel_SUI(int N, int Dim, int size_row, int size_col, char* type, cha
 	    	
 	
 		double *curRes=calloc(Dim, sizeof(double));
-	  	double *GradijentGlob=calloc(Dim*N, sizeof(double));
+	  	double *GradientGlob=calloc(Dim*N, sizeof(double));
 
 	   	double my_self_confidence=1-active_neighbours_weight;
 	 
 	   	for(i=0;i<Dim;i++){
 	   		curRes[i]=(1-my_self_confidence)*X[i];
 	   		for(j=1;j<=my_communicator_size-1;j++){
-	   			int my_neighbours_rank=get_my_active_neighbour(j-1, my_rank, my_neighbours, my_neighbours_count, active);//my_neighbours[j-1]; //ne znamo koji je ovo!!!!!!!!!!!!!!!!!!!
+	   			int my_neighbours_rank=get_my_active_neighbour(j-1, my_rank, my_neighbours, my_neighbours_count, active);
 	   			curRes[i]+=-myWMatrix[my_neighbours_rank]*Xremote[j*Dim+i];
 	   		}
 	   		curRes[i]+=stepSize*GradOld[i];
 	   	}
 
-	   	MPI_Gather(curRes, Dim, MPI_DOUBLE, GradijentGlob, Dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);	
+	   	MPI_Gather(curRes, Dim, MPI_DOUBLE, GradientGlob, Dim, MPI_DOUBLE, 0, MPI_COMM_WORLD);	
 	
 		double euclidean_norm;
 		iters=0;
 		if(my_rank==0){
-			euclidean_norm=cblas_dnrm2 (Dim*N, GradijentGlob, 1);
+			euclidean_norm=cblas_dnrm2 (Dim*N, GradientGlob, 1);
 			printf("%d:Euclidean norm for %d is %.5f\n", my_rank, k, euclidean_norm);
 			if(k<iter && euclidean_norm<epsilon){
 				iters=iter-k;
@@ -254,7 +254,7 @@ void DQNParallel_SUI(int N, int Dim, int size_row, int size_col, char* type, cha
 		}
 
 
-	    	cblas_daxpy(Dim, stepSize, Gradijent, 1, NablaPsi, 1);
+	    	cblas_daxpy(Dim, stepSize, Gradient, 1, NablaPsi, 1);
 
 	     	for(i=Dim-1;i>=0;--i)
 	     		AWeight[i*Dim+i]=1.0;
@@ -278,12 +278,12 @@ void DQNParallel_SUI(int N, int Dim, int size_row, int size_col, char* type, cha
 		free(sDirection);
 		free(pivotArray);
 		free(Xremote);
-		free(GradijentGlob);
+		free(GradientGlob);
 		free(curRes);
 	
 	}	
 
-	free(Gradijent);
+	free(Gradient);
 	free(AWeightInv);
 	free(ww);
 	free(subMatr);
@@ -321,5 +321,6 @@ void DQNParallel_SUI(int N, int Dim, int size_row, int size_col, char* type, cha
 		fclose(file);
 	}
 	free(X);
+	MPI_Finalize();
 }
 
