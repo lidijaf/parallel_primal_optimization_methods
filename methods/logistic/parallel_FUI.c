@@ -247,7 +247,7 @@ void DQNParallel_FUI(int N, int Dim, int size_row, int size_col, char* type, cha
 		}
 
 
-	  cblas_daxpy(Dim, stepSize, Gradijent, 1, NablaPsi, 1);
+	  cblas_daxpy(Dim, stepSize, Gradient, 1, NablaPsi, 1);
 
 	  cblas_dgemv(CblasRowMajor, CblasNoTrans, Dim, Dim, 1.0, AWeightInv, Dim, NablaPsi, 1, 1.0, sDirection, 1);
 	  cblas_daxpy(Dim, -1, sDirection, 1, X, 1);
