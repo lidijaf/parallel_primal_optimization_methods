@@ -297,6 +297,5 @@ void DQNParallel_FUI(int N, int Dim, int size_row, int size_col, char* type, cha
 		fclose(file);
 	}
 	free(X);
-	MPI_Finalize();
 }
 
